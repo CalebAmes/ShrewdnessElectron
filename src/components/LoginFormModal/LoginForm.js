@@ -1,5 +1,5 @@
 import React, { useState, useSelector } from "react";
-import * as sessionActions from "../../../__oldStore/session";
+import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import SignupFormModal from '../SignupFormModal'
 import "./LoginForm.scss";

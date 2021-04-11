@@ -3,9 +3,9 @@ import { CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Image from '../../icons/gorilla.svg';
-import * as sessionActions from '../../../__oldStore/session';
-import { getGroup } from '../../../__oldStore/groups'
-import { getChannel } from '../../../__oldStore/channels'
+import * as sessionActions from '../../store/session';
+import { getGroup } from '../../store/groups'
+import { getChannel } from '../../store/channels'
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 
