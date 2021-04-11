@@ -1,30 +1,24 @@
 import React,{ useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Image from '../../icons/gorilla.svg';
-import { getGroup } from '../../store/groups'
-import { getChannel } from '../../store/channels'
-import { io } from 'socket.io-client';
+import * as sessionActions from '../../../__oldStore/session';
+import { getGroup } from '../../../__oldStore/groups'
+import { getChannel } from '../../../__oldStore/channels'
 import LoginFormModal from '../LoginFormModal';
-import ProfileButton from './ProfileButton';
+import SignupFormModal from '../SignupFormModal';
+
 import '../../index.scss';
 import './Navigation.scss';
 
 const Navigation = (props) => {
   return (
     <>
-      <nav className='NavBar'>
-        <div className='NavBar-div'>
-        </div>
-      </nav>
-          <div className='navItem'>
-              <NavItem icon={<Image />}>
-                <Dropdown />
-              </NavItem>
-          </div>
-      <div className='pad'/>
+      <div className='navItem'>
+          <NavItem icon={<Image />}>
+          </NavItem>
+      </div>
     </>
   )
 }
@@ -46,7 +40,9 @@ export function NavItem(props) {
         { props.icon }
       </a>
 
-      {open && props.children}
+      {open && 
+        <Dropdown openFunc={openFunc} />
+      }
     </div>
   )
 }
@@ -59,12 +55,13 @@ export function NavComment(props) {
   )
 }
 
-export function Dropdown({setAuthenticated}) {
+export function Dropdown({openFunc}) {
   const dispatch = useDispatch();
   const groupsItems = useSelector((state) => state?.groups);
   const channelsItems = useSelector((state) => state?.channels)
   const user = useSelector((state) => state.session?.user)
 
+  const [ groupId, setGroupId ] = useState(0)
   const [ activeMenu, setActiveMenu ] = useState('main');
   const [ menuHeight, setMenuHeight ] = useState(null);
 
@@ -81,16 +78,21 @@ export function Dropdown({setAuthenticated}) {
     setMenuHeight(height);
   }
 
-  const logoutUser = async (e) => {
-    logout();
-    setAuthenticated(false);
+  const logout = (e) => {
+    e.preventDefault();
+    dispatch(sessionActions.logout());
   };
 
   function DropdownItem(props) {
+    const click = () => {
+      if (props.group) setGroupId(props.group.id)
+      props.goToMenu && setActiveMenu(props.goToMenu)
+    }
+
     return (
       <a href='#' 
         className='dropdown-item item' 
-        onClick={()=> props.goToMenu && setActiveMenu(props.goToMenu)}
+        onClick={click}
         >
             { props.children }
             <div>
@@ -101,110 +103,118 @@ export function Dropdown({setAuthenticated}) {
     );
   }
 
-  function DropdownChannel({ channels }) {
+  function DropdownChannel() {
     return (
-      <Link to={`/channels/${ channels.id }`} className='menu-item item'>
-        <div className='icon-button'></div>
-        {channels.name}
-      </Link>
+      <>
+      {
+        channelsArray.filter(channel => channel.groupId === groupId)
+          .map(channel => (
+            <Link className='dropdown-item item' to={`/chatRoom/${ channel.id }`}>{ channel.name }</Link>
+          ))
+      }
+      </>
     )
   }
 
-  function DropdownGroup({ groups }) {
+  function DropdownGroups() {
     return (
-      <div className='menu-item item'>
-      <Link to={`/groups/${ groups.id }`}>
-        <div className='icon-button'></div>
-        { groups.name }
-      </Link>
-      </div>
+      <>
+        {
+          groupsArray.map((group) => (
+            <DropdownItem 
+              goToMenu='channels' 
+              groupId={group.id} 
+              rightRightIcon={<i class="fas fa-chevron-right"/>}
+              group={group}
+              >{group.name}</DropdownItem>
+          ))
+        }
+      </>
     )
   }
 
   return (
-    <div className='dropdown' style={{ height: menuHeight }}>
-      <CSSTransition 
-        in={ activeMenu === 'main' } 
-        unmountOnExit
-        timeout={ 500 }
-        classNames='menu-primary'
-        onEnter={ calcHeight }
-        >
+    <>
+    { user && 
+      <>
+        <div className='cardBackground' onClick={ openFunc }></div>
+        <div className='dropdown' style={{ height: menuHeight }}>
+          <CSSTransition 
+            in={ activeMenu === 'main' } 
+            unmountOnExit
+            timeout={ 500 }
+            classNames='menu-primary'
+            onEnter={ calcHeight }
+            >
+            <ul className='dd'>
+              <p>Groups:</p>
+              <DropdownGroups />
+              {/* <DropdownItem 
+                rightRightIcon={<i class="fas fa-chevron-right"/>} goToMenu='groups'>
+                  Groups
+              </DropdownItem> */}
+              {/* <Link className='dropdown-item item' to="/users">Users</Link> */}
+              <div className='dropdown-item item' onClick={logout}>Log Out</div>
+            </ul>
+          </CSSTransition>
+
+          <CSSTransition 
+            in={ activeMenu === 'groups' } 
+            unmountOnExit
+            timeout={ 500 }
+            classNames='menu-secondary'
+            >
+            <ul className='dd'>
+              <DropdownItem 
+                rightRightIcon={<i class="fas fa-chevron-left"/>} 
+                goToMenu='main'>
+                  ...back
+              </DropdownItem>
+                <DropdownGroups />
+            </ul>
+
+          </CSSTransition>
+          <CSSTransition 
+            in={ activeMenu === 'channels' } 
+            unmountOnExit
+            timeout={ 500 }
+            classNames='menu-secondary'
+            >
+            <ul className='dd'>
+              {/* <DropdownItem 
+                rightIcon={<i class="fas fa-chevron-left"/>}
+                rightRightIcon={<i class="fas fa-chevron-left"/>}
+                goToMenu='main'>
+                ....main
+              </DropdownItem> */}
+              <p>Channels:</p>
+              <DropdownChannel />
+              <DropdownItem 
+                rightRightIcon={<i class="fas fa-chevron-left"/>}
+                goToMenu='main'>
+                  ...back
+              </DropdownItem>
+            </ul>
+          </CSSTransition>
+        </div>
+      </>
+    }
+    { !user &&
+    <>
+      <div className='cardBackground' onClick={ openFunc }></div>
+      <div className='dropdown' style={{ height: menuHeight }}>
         <ul className='dd'>
-          <div className='profileGrid'>
-            <Link to={`/profile/${user?.id}`} 
-              className='pGridItem profile' 
-              id='profile'>
-                Profile
-            </Link>
-            <Link to='/' 
-              className='pGridItem logout' 
-              // onClick={ }
-              >
-                Logout
-            </Link>
-          </div>
-          <DropdownItem 
-            rightRightIcon={<i class="fas fa-chevron-right"/>} goToMenu='groups'>
-              Groups
-          </DropdownItem>
-  
-            <Link className='dropdown-item item' to="/users">Users</Link>
-
-          <div className='dropdown-item item' >
-            <LoginFormModal />
-          </div>
-          <Link className='dropdown-item item' to="/signup">Sign Up</Link>
-          <Link className='dropdown-item item' to="/groups">Groups</Link>
-          <Link className='dropdown-item item' exact to="/">Home</Link>
-          <div className='dropdown-item item' >
-            <ProfileButton user={user} />
-          </div>
-
-        </ul>
-      </CSSTransition>
-
-      <CSSTransition 
-        in={ activeMenu === 'groups' } 
-        unmountOnExit
-        timeout={ 500 }
-        classNames='menu-secondary'
-        >
-        <ul className='dd'>
-          <DropdownItem 
-            rightRightIcon={<i class="fas fa-chevron-left"/>} 
-            goToMenu='main'>
-              ...back
-          </DropdownItem>
-          <DropdownItem 
-            rightRightIcon={<i class="fas fa-chevron-right"/>}
-            goToMenu='dms'>
-              Direct Messages
-            </DropdownItem>
-        </ul>
-
-      </CSSTransition>
-      <CSSTransition 
-        in={ activeMenu === 'dms' } 
-        unmountOnExit
-        timeout={ 500 }
-        classNames='menu-secondary'
-        >
-        <ul className='dd'>
-          <DropdownItem 
-            rightRightIcon={<i class="fas fa-chevron-left"/>}
-            goToMenu='main'>
-              ...back
-          </DropdownItem>
-          <DropdownItem 
-            rightIcon={<i class="fas fa-chevron-left"/>}
-            rightRightIcon={<i class="fas fa-chevron-left"/>}
-            goToMenu='main'>
-              ....main
-          </DropdownItem>
-        </ul>
-      </CSSTransition>
-    </div>
+        <div className='dropdown-item item' >
+          <LoginFormModal user={user} text={'Log In'} />
+        </div>
+        <div className='dropdown-item item' >
+          <SignupFormModal user={user} text={'Sign Up'} />
+        </div>
+      </ul>
+      </div>
+    </>
+    }
+  </>
   )
 }
 

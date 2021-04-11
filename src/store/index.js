@@ -7,7 +7,7 @@ import directMessages from './directMessages';
 import groups from './groups';
 import notifications from './notifications';
 import userGroups from './userGroups';
-import users from './users'
+import users from './users';
 
 const rootReducer = combineReducers({
   session,
@@ -32,7 +32,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const configureStore = (preloadedState) => {
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   return createStore(rootReducer, preloadedState, enhancer);
 };
 

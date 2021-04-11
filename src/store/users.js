@@ -11,14 +11,14 @@ const removeUser = () => ({
 })
 
 export const getUsers = () => async (dispatch) => {
-  const res = await fetch('http://localhost:5000/api/users');
+  const res = await fetch('https://shrewdness.herokuapp.com/api/users/');
   const data = await res.json();
   dispatch(setUser(data.users));
   return res;
 }
 
 export const deleteUser = () => async (dispatch) => {
-  const res = await fetch ('http://localhost:5000/api/users', {
+  const res = await fetch ('https://shrewdness.herokuapp.com/api/users/', {
     method: 'DELETE',
   });
   dispatch(removeUser());

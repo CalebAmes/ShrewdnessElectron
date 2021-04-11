@@ -17,4 +17,4 @@ window.sendNotification = (message) => {
   ipcRenderer.send('notify', message);
 }
 
-  
+2

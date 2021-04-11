@@ -11,9 +11,12 @@ function createWindow() {
     backgroundColor: "white",
     webPreferences: {
       nodeIntegration: false,
-      // preload: path.join(__dirname, 'preload.js')
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   })
+
+  // win.loadURL('https://shrewdness.herokuapp.com/')
 
   win.loadFile('./public/index.html')
   isDev && win.webContents.openDevTools();
