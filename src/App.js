@@ -1,10 +1,10 @@
+import { ipcRenderer } from 'electron';
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import LoginFormPage from "./components/LoginFormPage";
 import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
-import Groups from "./components/Groups";
 import ChatRoom from "./components/ChatRoom";
 import { getChannelMessages } from './store/channelMessages';
 import { getChannel } from './store/channels';
@@ -13,8 +13,18 @@ import { getGroup } from './store/groups';
 import { getNotification } from './store/notifications';
 import { getUserGroup } from './store/userGroups';
 import { getUsers } from './store/users';
+import {
+  main,
+  darkmode,
+  blue,
+} from './components/index.js'
 
 function App() {
+  ipcRenderer.on('HANDLE_FETCH_USER_THEME', (_,theme) => {
+    if (theme.theme.theme.theme === 'main') main();
+    if (theme.theme.theme.theme === 'blue') blue();
+    if (theme.theme.theme.theme === 'darkmode') darkmode();
+  });
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect( async () => {
@@ -31,12 +41,12 @@ function App() {
 
   return (
     <>
-      {(
+      <Navigation isLoaded={isLoaded} />
+      {isLoaded && (
         <Switch>
           <Route path= '/chatRoom/:id' >
-            <Navigation isLoaded={isLoaded} />
             <ChatRoom />
-          </Route>
+          </Route> */}
           <Route path='/' >
             <LoginFormPage />
           </Route>

@@ -52,7 +52,7 @@
   top: 48px;
   transform: translateX(-0px);
   color: black;
-  background: #beee62;
+  background: var(--highlight);
   overflow: scroll;
   z-index: 4;
   transition: height var(--speed) ease;
@@ -127,11 +127,11 @@
 }
 
 .dropdown-item:hover {
-  background: #fff;
+  background: var(--hover);
 }
 
 .menu-item:hover {
-  background: #fff;
+  background: var(--hover);
 }
 
 .cat-menu > i{

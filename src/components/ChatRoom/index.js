@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroup } from '../../store/groups';
 import { getChannel } from '../../store/channels';
-import { getChannelMessages } from '../../store/channelMessages';
+import { getChannelMessages } from '../../store/channelMessages'
 import MessageInput from '../MessageInput';
 import socket from '../../service/socket';
 import './ChatRoom.scss';
@@ -27,7 +27,6 @@ const ChatRoom = () => {
   //TODO: add an api route to get just the current channels messages from the redux store to you don't have to store all of them
   const rawMessages = Object.values(channelMessagesObj);
   const msgs = rawMessages.filter(message => message.channelId == id);
-  const channels = Object.values(channelsObj);
 
   
   useEffect(async () => {
@@ -40,19 +39,11 @@ const ChatRoom = () => {
       await dispatch(getChannelMessages());
       setIsLoaded(true);
       scroll()
-      // ipcRenderer.send('notify', msg.messageText)
     })
     socket.on(`join_channel_res_${id}`, (msg) => {socketRes(msg)})
     scroll()
   }, []);
   
-  const keyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      sendMessage();
-      setValue('');
-    }
-  }
   const sendMessage = () => {
     if (value.trim() === '') return;
 
@@ -111,7 +102,6 @@ export function ChatComponent ({ message, users, scrollValue }) {
   let messageImg;
 
   const closeCard = async () => {
-    const div = document.querySelector('.post');
     const scroll = await scrollValue();
     setHeight(scroll);
     setCard(!card)
@@ -166,6 +156,7 @@ export function ChatComponent ({ message, users, scrollValue }) {
 }
 
 export function UserCard ({ user, closeCard, height }) {
+  console.log(height)
   const styles = { 
     transform: `translateY(-${height}px)` 
 };

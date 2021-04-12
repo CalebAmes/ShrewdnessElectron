@@ -6,7 +6,11 @@ import Image from '../../icons/gorilla.svg';
 import * as sessionActions from '../../store/session';
 import { getGroup } from '../../store/groups'
 import { getChannel } from '../../store/channels'
-
+import {
+  main,
+  darkmode,
+  blue,
+} from '../index'
 import '../../index.scss';
 import './Navigation.scss';
 
@@ -147,12 +151,17 @@ export function Dropdown({openFunc}) {
             <ul className='dd'>
               <p>Groups:</p>
               <DropdownGroups />
+              <DropdownItem 
+                rightRightIcon={<i class="fas fa-sliders-h"/>} 
+                goToMenu='themes'>
+                  Themes
+              </DropdownItem>
               <div className='dropdown-item item' onClick={logout}>Log Out</div>
             </ul>
           </CSSTransition>
 
           <CSSTransition 
-            in={ activeMenu === 'groups' } 
+            in={ activeMenu === 'themes' } 
             unmountOnExit
             timeout={ 500 }
             classNames='menu-secondary'
@@ -163,7 +172,9 @@ export function Dropdown({openFunc}) {
                 goToMenu='main'>
                   ...back
               </DropdownItem>
-                <DropdownGroups />
+              <div className='dropdown-item item' onClick={main}>Main</div>
+              <div className='dropdown-item item' onClick={darkmode}>Dark Mode</div>
+              <div className='dropdown-item item' onClick={blue}>Stylish</div>
             </ul>
 
           </CSSTransition>
