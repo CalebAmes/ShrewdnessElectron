@@ -1,4 +1,15 @@
+.center {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: black;
+}
+
 .loginDiv {
+  margin: auto;
+  margin-top: 150px;
   width: 480px;
   height: 406px;
   background: #36393f;

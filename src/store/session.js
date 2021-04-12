@@ -36,32 +36,6 @@ export const restoreUser = () => async (dispatch) => {
   })
 };
 
-
-export const signup = (user) => async (dispatch) => {
-  const { username, email, password, bio, avatar } = user;
-  user = {
-    credential: username,
-    password
-  }
-  ipcRenderer.send('SAVE_USER_LOCAL_STORAGE', user);
-  const formData = new FormData();
-  formData.append('username', username)
-  formData.append('email', email)
-  formData.append('bio', bio)
-  formData.append('password', password)
-
-  if (avatar) formData.append('avatar', avatar);
-
-  const res = await csrfFetch('https://shrewdness.herokuapp.com/api/users/', {
-    method: 'POST',
-    headers: {'Content-Type': 'multipart/form-data'},
-    body: formData,
-  });
-  
-  const data = await res.json()
-  return res;
-};
-
 export const logout = () => async (dispatch) => {
   const response = await csrfFetch('https://shrewdness.herokuapp.com/api/session/', {
     method: 'DELETE'

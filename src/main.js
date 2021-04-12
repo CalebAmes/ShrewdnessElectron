@@ -56,6 +56,12 @@ ipcMain.on('FETCH_USER_LOCAL_STORAGE', () => {
       user
     })
   })
+  storage.get('user-theme', (err, theme) => {
+    if (err) return null;
+    win.send('HANDLE_FETCH_USER_THEME', {
+      theme
+    })
+  })
 })
 
 ipcMain.on('SAVE_USER_LOCAL_STORAGE', (_,user) => {
@@ -65,6 +71,16 @@ ipcMain.on('SAVE_USER_LOCAL_STORAGE', (_,user) => {
 const setUserStorage = (user) => {
   storage.set('user-storage', {
     user,
+  })
+}
+
+ipcMain.on('SAVE_USER_THEME', (_, theme) => {
+  setUserTheme(theme)
+})
+
+const setUserTheme = (theme) => {
+  storage.set('user-theme', {
+    theme,
   })
 }
 
