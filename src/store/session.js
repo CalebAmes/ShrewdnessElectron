@@ -1,4 +1,5 @@
 import { csrfFetch } from './csrf.js';
+import { ipcRenderer } from 'electron';
 
 const SET_USER = 'session/setUser';
 const REMOVE_USER = 'session/removeUser';
@@ -12,15 +13,9 @@ const removeUser = () => ({
   type: REMOVE_USER
 });
 
-export const restoreUser = () => async dispatch => {
-  const response = await csrfFetch('https://shrewdness.herokuapp.com/api/session/');
-  const data = await response.json();
-  dispatch(setUser(data.user));
-  return response;
-};
-
 export const login = (user) => async (dispatch) => {
-  const { credential, password } = user;
+  const { credential, password } = user
+  ipcRenderer.send('SAVE_USER_LOCAL_STORAGE', user);
   const response = await csrfFetch('https://shrewdness.herokuapp.com/api/session/', {
     method: 'POST',
     body: JSON.stringify({
@@ -33,8 +28,22 @@ export const login = (user) => async (dispatch) => {
   return response;
 };
 
+export const restoreUser = () => async (dispatch) => {
+  ipcRenderer.send('FETCH_USER_LOCAL_STORAGE');
+  await ipcRenderer.on('HANDLE_FETCH_USER_LOCAL_STORAGE', async (_, user) => {
+    if(user) dispatch(login(user.user.user));
+    else logout();
+  })
+};
+
+
 export const signup = (user) => async (dispatch) => {
   const { username, email, password, bio, avatar } = user;
+  user = {
+    credential: username,
+    password
+  }
+  ipcRenderer.send('SAVE_USER_LOCAL_STORAGE', user);
   const formData = new FormData();
   formData.append('username', username)
   formData.append('email', email)
@@ -48,9 +57,8 @@ export const signup = (user) => async (dispatch) => {
     headers: {'Content-Type': 'multipart/form-data'},
     body: formData,
   });
-
+  
   const data = await res.json()
-  await dispatch(setUser(data.user));
   return res;
 };
 

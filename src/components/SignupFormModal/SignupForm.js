@@ -49,7 +49,6 @@ function SignupFormPage({open, fromLogin}) {
           return setErrors(data.errors);
         }
     });
-    if (response && response.ok) return window.location.reload() 
   };
 
 

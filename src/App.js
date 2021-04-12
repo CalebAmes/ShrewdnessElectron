@@ -20,7 +20,7 @@ import { getUsers } from './store/users';
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
-  useEffect(() => {
+  useEffect( async () => {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
     dispatch(getChannelMessages());
     dispatch(getChannel());
@@ -30,6 +30,7 @@ function App() {
     dispatch(getUserGroup());
     dispatch(getUsers());
   }, [dispatch]);
+
 
   return (
     <>
@@ -42,16 +43,16 @@ function App() {
           <Route path="/signup">
             <SignupFormPage />
           </Route>
-          <Route path= '/users' >
+          {/* <Route path= '/users' >
             <Users />
-          </Route>
+          </Route> */}
           <Route path= '/groups' >
             <Groups />
           </Route>
           <Route path= '/chatRoom/:id' >
             <ChatRoom />
           </Route>
-          <Route path='/' exact >
+          <Route path='/' >
             <Home />
           </Route>
         </Switch>

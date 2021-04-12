@@ -1,7 +1,7 @@
 import React, { useState, useSelector } from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
-import SignupFormModal from '../SignupFormModal'
+import SignupFormModal from '../SignupFormModal';
 import "./LoginForm.scss";
 
 function LoginForm({open, fromSignup}) {

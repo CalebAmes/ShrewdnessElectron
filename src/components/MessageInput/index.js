@@ -21,7 +21,6 @@ const MessageInput = ({ user, channelId, channelName }) => {
 
   const sendMessage = () => {
     if (value.trim() === '') return;
-    console.log(image)
 
     let msg;
 
@@ -41,7 +40,6 @@ const MessageInput = ({ user, channelId, channelName }) => {
         messageImg: null,
       }
     }
-    console.log(image)
     socket.emit(`chatMessage`, msg)
   }
 

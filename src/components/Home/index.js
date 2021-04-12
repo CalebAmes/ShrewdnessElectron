@@ -6,9 +6,11 @@ import Image from '../../icons/gorilla.svg';
 import Arrow from '../../icons/arrow_10.svg';
 
 const Home = () => {
+
   const user = useSelector(state => state.session?.user)
 
-  if (user) return <Redirect to='/chatRoom/1' />;
+  if (user) return <Redirect to='/chatRoom/1' />
+
 
   return (
     <>
