@@ -1,10 +1,11 @@
+import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroup } from '../../store/groups';
 import { getChannel } from '../../store/channels';
-import { getChannelMessages } from '../../store/channelMessages'
+import { getChannelMessages } from '../../store/channelMessages';
 import MessageInput from '../MessageInput';
 import socket from '../../service/socket';
 import './ChatRoom.scss';
@@ -37,6 +38,8 @@ const ChatRoom = () => {
     // socket.emit('join_channel', format(channel, user))
     socket.on(`chat_message_${id}`, async (msg) => {
       await dispatch(getChannelMessages());
+      ipcRenderer.send('notify', msg);
+      console.log('hit')
       setIsLoaded(true);
       scroll()
     })

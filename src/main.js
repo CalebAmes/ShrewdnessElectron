@@ -22,7 +22,6 @@ function createWindow() {
       contextIsolation: false,
       // preload: path.join(__dirname, 'preload.js')
     }
-    
   })
 
   win.loadFile('./public/index.html')
@@ -47,7 +46,16 @@ const getUserStorage = () => {
   })
 }
 
-app.whenReady().then(createWindow).then(getUserStorage());
+app.whenReady().then(() => {
+  createWindow()
+  getUserStorage()
+  const notification = new Notification({ silent: true, title: 'hello user', body: 'welcome to Shrewdness'})
+  notification.show()
+});
+
+ipcMain.on('notify', (_, msg) => 
+  new Notification({sound: 'Purr', title: 'chat message', body: 'new message in chat'}).show()
+)
 
 ipcMain.on('FETCH_USER_LOCAL_STORAGE', () => {
   storage.get('user-storage', (err, user) => {
@@ -84,9 +92,6 @@ const setUserTheme = (theme) => {
   })
 }
 
-ipcMain.on('notify', (_, message) => {
-  new Notification({title: 'chatApp', body: message}).show();
-})
 
 ipcMain.on('app-quit', () => {
   app.quit();
