@@ -11,13 +11,30 @@ const isDev = !app.isPackaged;
 const storage = require('electron-json-storage');
 
 const dockIcon = path.join(__dirname, 'icons', 'gorillaFile.jpeg');
-const trayIcon = path.join(__dirname, 'icons', 'gorillaFile.jpeg');
+const trayIcon = path.join(__dirname, 'icons', 'gorillaFileTray.jpeg');
+
+function createSplashScreen() {
+  const window = new BrowserWindow({
+    width: 800,
+    height: 400,
+    backgroundColor: "#4DCCBD",
+    frame: false,
+    transparent: true,
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+    }
+  })
+  window.loadFile('./public/splash.html')
+}
 
 function createWindow() {
   win = new BrowserWindow({
     width: 550,
     height: 1900,
     backgroundColor: "black",
+    show: true,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -50,12 +67,18 @@ const getUserStorage = () => {
 
 let tray = null;
 app.whenReady().then(() => {
-  createWindow()
-  getUserStorage()
+  // getUserStorage()
   const notification = new Notification({ silent: true, title: 'hello user', body: 'welcome to Shrewdness'})
   notification.show()
   tray = new Tray(trayIcon)
-  // tray.setContextMeny(menu)
+
+  // const splash = createSplashScreen();
+  const mainApp = createWindow();
+
+  // setTimeout(() => {
+  //   createWindow().show();
+  //   createSplashScreen().destroy();
+  // }, 2000)
 });
 
 ipcMain.on('notify', (_, msg) => 
