@@ -6,8 +6,6 @@ import Image from '../../icons/gorilla.svg';
 import * as sessionActions from '../../store/session';
 import { getGroup } from '../../store/groups'
 import { getChannel } from '../../store/channels'
-import LoginFormModal from '../LoginFormModal';
-import SignupFormModal from '../SignupFormModal';
 
 import '../../index.scss';
 import './Navigation.scss';
@@ -149,11 +147,6 @@ export function Dropdown({openFunc}) {
             <ul className='dd'>
               <p>Groups:</p>
               <DropdownGroups />
-              {/* <DropdownItem 
-                rightRightIcon={<i class="fas fa-chevron-right"/>} goToMenu='groups'>
-                  Groups
-              </DropdownItem> */}
-              {/* <Link className='dropdown-item item' to="/users">Users</Link> */}
               <div className='dropdown-item item' onClick={logout}>Log Out</div>
             </ul>
           </CSSTransition>
@@ -181,12 +174,6 @@ export function Dropdown({openFunc}) {
             classNames='menu-secondary'
             >
             <ul className='dd'>
-              {/* <DropdownItem 
-                rightIcon={<i class="fas fa-chevron-left"/>}
-                rightRightIcon={<i class="fas fa-chevron-left"/>}
-                goToMenu='main'>
-                ....main
-              </DropdownItem> */}
               <p>Channels:</p>
               <DropdownChannel />
               <DropdownItem 
@@ -198,21 +185,6 @@ export function Dropdown({openFunc}) {
           </CSSTransition>
         </div>
       </>
-    }
-    { !user &&
-    <>
-      <div className='cardBackground' onClick={ openFunc }></div>
-      <div className='dropdown' style={{ height: menuHeight }}>
-        <ul className='dd'>
-        <div className='dropdown-item item' >
-          <LoginFormModal user={user} text={'Log In'} />
-        </div>
-        <div className='dropdown-item item' >
-          <SignupFormModal user={user} text={'Sign Up'} />
-        </div>
-      </ul>
-      </div>
-    </>
     }
   </>
   )

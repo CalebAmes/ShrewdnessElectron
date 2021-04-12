@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Switch } from "react-router-dom";
-import SignupFormPage from "./components/SignupFormPage";
 import LoginFormPage from "./components/LoginFormPage";
 import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
-import Home from './components/Home';
-import Users from "./components/Users";
 import Groups from "./components/Groups";
 import ChatRoom from "./components/ChatRoom";
 import { getChannelMessages } from './store/channelMessages';
@@ -34,26 +31,14 @@ function App() {
 
   return (
     <>
-      <Navigation isLoaded={isLoaded} />
-      {isLoaded && (
+      {(
         <Switch>
-          <Route path="/login" >
-            <LoginFormPage />
-          </Route>
-          <Route path="/signup">
-            <SignupFormPage />
-          </Route>
-          {/* <Route path= '/users' >
-            <Users />
-          </Route> */}
-          <Route path= '/groups' >
-            <Groups />
-          </Route>
           <Route path= '/chatRoom/:id' >
+            <Navigation isLoaded={isLoaded} />
             <ChatRoom />
           </Route>
           <Route path='/' >
-            <Home />
+            <LoginFormPage />
           </Route>
         </Switch>
       )}
