@@ -2,14 +2,16 @@ const {
   app,
   BrowserWindow,
   ipcMain, 
-  Notification 
+  Notification,
+  Tray,
 } = require('electron');
 const path = require('path');
 const isDev = !app.isPackaged;
 
 const storage = require('electron-json-storage');
 
-// let mainWindow = null;
+const dockIcon = path.join(__dirname, 'icons', 'gorillaFile.jpeg');
+const trayIcon = path.join(__dirname, 'icons', 'gorillaFile.jpeg');
 
 function createWindow() {
   win = new BrowserWindow({
@@ -46,11 +48,14 @@ const getUserStorage = () => {
   })
 }
 
+let tray = null;
 app.whenReady().then(() => {
   createWindow()
   getUserStorage()
   const notification = new Notification({ silent: true, title: 'hello user', body: 'welcome to Shrewdness'})
   notification.show()
+  tray = new Tray(trayIcon)
+  // tray.setContextMeny(menu)
 });
 
 ipcMain.on('notify', (_, msg) => 
@@ -96,6 +101,10 @@ const setUserTheme = (theme) => {
 ipcMain.on('app-quit', () => {
   app.quit();
 })
+
+if (process.platform === 'darwin') {
+  app.dock.setIcon(dockIcon)
+}
 
 
 app.on('window-all-closed', () => {
