@@ -51,7 +51,7 @@
   width: 300px;
   top: 48px;
   transform: translateX(-0px);
-  color: black;
+  color: var(--color-main);
   background: var(--highlight);
   overflow: scroll;
   z-index: 4;
@@ -71,7 +71,7 @@
 
 .item {
   transition: all var(--speed);
-  color: black;
+  color: var(--color-main);
   height: 60px;
   display: flex;
   align-items: center;
