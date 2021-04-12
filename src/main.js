@@ -1,22 +1,29 @@
-const { app, BrowserWindow, ipcMain, Notification } = require('electron');
+const { 
+  app,
+  BrowserWindow,
+  ipcMain, 
+  Notification 
+} = require('electron');
 const path = require('path');
 const isDev = !app.isPackaged;
 
-let mainWindow = null;
+const storage = require('electron-json-storage');
+
+// let mainWindow = null;
 
 function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1200,
     height: 800,
     backgroundColor: "white",
     webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+      // preload: path.join(__dirname, 'preload.js')
     }
+    
   })
-
-  // win.loadURL('https://shrewdness.herokuapp.com/')
 
   win.loadFile('./public/index.html')
   isDev && win.webContents.openDevTools();
@@ -28,7 +35,38 @@ if (isDev) {
   })
 }
 
-app.whenReady().then(createWindow);
+const getUserStorage = () => {
+  storage.get('user-storage', function(err, data) {
+    if (err) return null;
+
+    win.send('HANDLE_FETCH_USER_LOCAL_STORAGE', {
+      success: true, 
+      message: 'Fetch User Local Storage',
+      data,
+    })
+  })
+}
+
+app.whenReady().then(createWindow).then(getUserStorage());
+
+ipcMain.on('FETCH_USER_LOCAL_STORAGE', () => {
+  storage.get('user-storage', (err, user) => {
+    if (err) return null;
+    win.send('HANDLE_FETCH_USER_LOCAL_STORAGE', {
+      user
+    })
+  })
+})
+
+ipcMain.on('SAVE_USER_LOCAL_STORAGE', (_,user) => {
+  setUserStorage(user)
+})
+
+const setUserStorage = (user) => {
+  storage.set('user-storage', {
+    user,
+  })
+}
 
 ipcMain.on('notify', (_, message) => {
   new Notification({title: 'chatApp', body: message}).show();

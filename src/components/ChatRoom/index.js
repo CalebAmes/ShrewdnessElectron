@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroup } from '../../store/groups';
 import { getChannel } from '../../store/channels';
-import { getChannelMessages } from '../../store/channelMessages'
+import { getChannelMessages } from '../../store/channelMessages';
 import MessageInput from '../MessageInput';
 import socket from '../../service/socket';
 import './ChatRoom.scss';
@@ -40,6 +40,7 @@ const ChatRoom = () => {
       await dispatch(getChannelMessages());
       setIsLoaded(true);
       scroll()
+      // ipcRenderer.send('notify', msg.messageText)
     })
     socket.on(`join_channel_res_${id}`, (msg) => {socketRes(msg)})
     scroll()
@@ -165,7 +166,6 @@ export function ChatComponent ({ message, users, scrollValue }) {
 }
 
 export function UserCard ({ user, closeCard, height }) {
-  console.log(height)
   const styles = { 
     transform: `translateY(-${height}px)` 
 };
