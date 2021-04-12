@@ -66,9 +66,10 @@ const ChatRoom = () => {
   }
 
   const scrollValue = () => {
-    if (document.querySelector('.chatMessages')){
-      const div = document.querySelector('.chatMessages')
-      const height = div.scrollTop
+    if (document.querySelector('.chatComponentDiv')){
+      const div = document.querySelector('.chatComponentDiv')
+      console.log(div)
+      const height = div.scrollTop;
       return height
     }
   }
@@ -96,7 +97,7 @@ const ChatRoom = () => {
 export function ChatComponent ({ message, users, scrollValue }) {
   const [open, setOpen] = useState(false)
   const [card, setCard] = useState(false)
-  const [height, setHeight] = useState(0)
+  const [height, setHeight] = useState(null)
   const userId = message.userId;
   const user = users[userId]
   let messageImg;

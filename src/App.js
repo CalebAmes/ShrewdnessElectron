@@ -20,14 +20,14 @@ import {
 } from './components/index.js'
 
 function App() {
-  ipcRenderer.on('HANDLE_FETCH_USER_THEME', (_,theme) => {
-    if (theme.theme.theme.theme === 'main') main();
-    if (theme.theme.theme.theme === 'blue') blue();
-    if (theme.theme.theme.theme === 'darkmode') darkmode();
-  });
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect( async () => {
+    ipcRenderer.on('HANDLE_FETCH_USER_THEME', (_,theme) => {
+      if (theme.theme.theme.theme === 'main') main();
+      if (theme.theme.theme.theme === 'blue') blue();
+      if (theme.theme.theme.theme === 'darkmode') darkmode();
+    });
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
     dispatch(getChannelMessages());
     dispatch(getChannel());
@@ -44,9 +44,21 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
+          {/* <Route path="/login" >
+            <LoginFormPage />
+          </Route>
+          <Route path="/signup">
+            <SignupFormPage />
+          </Route>
+          <Route path= '/users' >
+            <Users />
+          </Route>
+          <Route path= '/groups' >
+            <Groups />
+          </Route> */}
           <Route path= '/chatRoom/:id' >
             <ChatRoom />
-          </Route> */}
+          </Route>
           <Route path='/' >
             <LoginFormPage />
           </Route>

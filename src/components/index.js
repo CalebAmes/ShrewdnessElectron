@@ -26,9 +26,3 @@ export const blue = () => {
     theme: 'blue'
   });
 }
-
-// export const red = () => {
-//   const body = document.getElementById('body');
-//   body.className = '';
-//   body.classList.add('red');
-// }

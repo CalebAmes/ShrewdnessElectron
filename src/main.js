@@ -13,9 +13,9 @@ const storage = require('electron-json-storage');
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    backgroundColor: "white",
+    width: 550,
+    height: 1900,
+    backgroundColor: "black",
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -26,7 +26,7 @@ function createWindow() {
   })
 
   win.loadFile('./public/index.html')
-  isDev && win.webContents.openDevTools();
+  // isDev && win.webContents.openDevTools();
 }
 
 if (isDev) {
