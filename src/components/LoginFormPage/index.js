@@ -22,8 +22,6 @@ function LoginForm({open, fromSignup}) {
           setErrors(res.data.errors);
         }
       })
-
-    if(res && res.ok) open()
   };
 
   const demoLogin = () => {

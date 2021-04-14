@@ -45,7 +45,7 @@ const ChatRoom = () => {
     })
     socket.on(`join_channel_res_${id}`, (msg) => {socketRes(msg)})
     scroll()
-  }, []);
+  }, [id]);
   
   const sendMessage = () => {
     if (value.trim() === '') return;
@@ -83,7 +83,7 @@ const ChatRoom = () => {
         <div className='chatMessages' onClick={ scrollValue }>
           {msgs.map((msg) => (
 
-            <ChatComponent message={msg} users={users} scrollValue={ scrollValue } currentUserId={user.id} />
+            <ChatComponent key={msg.id} message={msg} users={users} scrollValue={ scrollValue } currentUserId={user.id} />
           ))}
           <div id='messagePad'>{hello}</div>
         </div>
@@ -148,9 +148,9 @@ export function ChatComponent ({ message, users, scrollValue }) {
       </div>
       { open &&
       <>
-        <div class="modal">
+        <div className="modal">
         <div className="modal-background" onClick={() => setOpen(!open)} />
-          <img src={messageImg} class="modal-content"/>
+          <img src={messageImg} className="modal-content"/>
         </div>
       </>
       }

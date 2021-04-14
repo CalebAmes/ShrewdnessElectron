@@ -27,16 +27,16 @@ const Groups = () => {
           <h1>This is the groups page</h1>
           {
             groups.map(group => (
-              <>
+              <div key={group.id}>
                 <h3>{ group.name }</h3>
                 <ul>
                   {
                     channels.filter(channel => channel.groupId == group.id).map(channel => (
-                      <li>{ channel.name }</li>
+                      <li key={channel.id}>{ channel.name }</li>
                     ))
                   }
                 </ul>
-              </>
+              </div>
             ))
           }
         </>
