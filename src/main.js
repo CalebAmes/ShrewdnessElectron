@@ -15,8 +15,8 @@ const trayIcon = path.join(__dirname, 'icons', 'gorillaFileTray.jpeg');
 
 function createSplashScreen() {
   const window = new BrowserWindow({
-    width: 800,
-    height: 400,
+    width: 500,
+    height: 300,
     backgroundColor: "#4DCCBD",
     frame: false,
     transparent: true,
@@ -49,7 +49,7 @@ function createWindow() {
 
 if (isDev) {
   require('electron-reload')(__dirname, {
-    electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+    electron: path.join(__dirname, '../', 'node_modules', '.bin', 'electron')
   })
 }
 
@@ -72,7 +72,7 @@ app.whenReady().then(() => {
   notification.show()
   tray = new Tray(trayIcon)
 
-  // const splash = createSplashScreen();
+  const splash = createSplashScreen();
   const mainApp = createWindow();
 
   // setTimeout(() => {
