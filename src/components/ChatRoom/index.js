@@ -5,11 +5,15 @@ import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroup } from '../../store/groups';
 import { getChannel } from '../../store/channels';
-import { getChannelMessages } from '../../store/channelMessages';
+import { 
+  getChannelMessages,
+  deleteChannelMessage,
+  } from '../../store/channelMessages';
 import MessageInput from '../MessageInput';
 import socket from '../../service/socket';
 import './ChatRoom.scss';
 import '../UserCard/UserCard.scss';
+import '../../context/Modal.css'
 
 const ChatRoom = () => {
   const dispatch = useDispatch();
@@ -22,51 +26,43 @@ const ChatRoom = () => {
   const { id } = useParams();
   const channelId = id
   const channel = channelsObj[channelId];
-  const [value, setValue] = useState('');
-  const userId = user?.id
+
   
   //TODO: add an api route to get just the current channels messages from the redux store to you don't have to store all of them
   const rawMessages = Object.values(channelMessagesObj);
-  const msgs = rawMessages.filter(message => message.channelId == id);
-
+  const msgs = rawMessages?.filter(message => message?.channelId == id);
   
-  useEffect(async () => {
-    await dispatch(getGroup());
-    await dispatch(getChannel());
-    await dispatch(getChannelMessages())
+  
+  useEffect(() => {
+    dispatch(getGroup());
+    dispatch(getChannel());
+    dispatch(getChannelMessages())
     setIsLoaded(true);
-    // socket.emit('join_channel', format(channel, user))
+
+    
     socket.on(`chat_message_${id}`, async (msg) => {
       await dispatch(getChannelMessages());
       ipcRenderer.send('notify', msg);
-      console.log('hit')
-      setIsLoaded(true);
       scroll()
     })
-    socket.on(`join_channel_res_${id}`, (msg) => {socketRes(msg)})
+
+
+    socket.on(`edit_channel_${id}`, async () => {
+      await dispatch(getChannelMessages());
+    })
+
+
     scroll()
+
+
   }, [id]);
   
-  const sendMessage = () => {
-    if (value.trim() === '') return;
-
-    const msg = {
-      messageText: value.trim(),
-      userId,
-      channelId,
-    }
-    socket.emit(`chatMessage`, msg)
-  }
-
-  const socketRes = (msg) => {
-    setHello(msg)
-    scroll()
-  }
 
   const scroll = () => {
     const messagePad = document.getElementById('messagePad')
     messagePad?.scrollIntoView({ behavior: "smooth" })
   }
+
 
   const scrollValue = () => {
     if (document.querySelector('.chatComponentDiv')){
@@ -77,17 +73,26 @@ const ChatRoom = () => {
     }
   }
 
+
   return (
     <>{ isLoaded && user &&
       <>
+        
         <div className='chatMessages' onClick={ scrollValue }>
           {msgs.map((msg) => (
 
-            <ChatComponent key={msg.id} message={msg} users={users} scrollValue={ scrollValue } currentUserId={user.id} />
+            <ChatComponent 
+              key={msg.id} 
+              channelId={id} 
+              message={msg} 
+              users={users} 
+              scrollValue={ scrollValue } 
+              currentUserId={user.id} 
+            />
           ))}
-          <div id='messagePad'>{hello}</div>
+        <div id='messagePad'> </div>
         </div>
-        <MessageInput user={user} channelId={id} channelName={channel.name} />
+        <MessageInput user={user} channelId={id} channelName={channel?.name} />
       </>
     }{
       !user && 
@@ -97,18 +102,25 @@ const ChatRoom = () => {
   )
 }
 
-export function ChatComponent ({ message, users, scrollValue }) {
+
+export function ChatComponent ({ message, channelId, currentUserId, users, scrollValue }) {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false)
   const [card, setCard] = useState(false)
-  const [height, setHeight] = useState(null)
+  const [height, setHeight] = useState(0)
   const userId = message.userId;
-  const user = users[userId]
+  const user = users[userId];
   let messageImg;
 
   const closeCard = async () => {
     const scroll = await scrollValue();
     setHeight(scroll);
     setCard(!card)
+  }
+
+  const deleteMessage = async (id) => {
+    await dispatch(deleteChannelMessage(id));
+    socket.emit('edit', channelId)
   }
 
   if (message.messageImg) messageImg = message.messageImg;
@@ -131,12 +143,11 @@ export function ChatComponent ({ message, users, scrollValue }) {
               </div>
             </div>
             <div className='messageText'>
-              { message.messageText }
+              <p>{ message.messageText }</p>
             </div>
           <div className='messageImgDiv'>
             { messageImg &&
             <>
-              
               <div className='divImage' onClick={() => setOpen(!open)}>
                 <img src={messageImg} className='messageImg'/>
               </div>
@@ -145,6 +156,13 @@ export function ChatComponent ({ message, users, scrollValue }) {
           </div>
           </div>
         </div>
+        {
+          user?.id === currentUserId &&
+          <div className='deleteMessage' 
+            onClick={() => deleteMessage(message.id)}>
+            <i className="fas fa-trash-alt"/>
+          </div>
+        }
       </div>
       { open &&
       <>
@@ -156,7 +174,6 @@ export function ChatComponent ({ message, users, scrollValue }) {
       }
     </>
   )
-
 }
 
 export function UserCard ({ user, closeCard, height }) {
