@@ -13,6 +13,7 @@ import MessageInput from '../MessageInput';
 import socket from '../../service/socket';
 import './ChatRoom.scss';
 import '../UserCard/UserCard.scss';
+import '../../context/Modal.css'
 
 const ChatRoom = () => {
   const dispatch = useDispatch();
