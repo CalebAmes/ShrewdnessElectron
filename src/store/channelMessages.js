@@ -8,12 +8,10 @@ const setMessage = (channelMessage) => ({
   channelMessage,
 })
 
-
 const addMessage = (channelMessage) => ({
-  type: ADD_MESSAGE,
-  channelMessage,
-})
-
+	type: ADD_MESSAGE,
+	channelMessage,
+});
 
 const removeMessage = () => ({
   type: REMOVE_MESSAGE,
@@ -28,8 +26,24 @@ export const getChannelMessages = () => async (dispatch) => {
 }
 
 
+export const updateChannelMessage = (newMessage, id) => async (dispatch) => {
+  const res = await fetch (`https://shrewdness.herokuapp.com/api/channelMessages/update`, {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      id, 
+      messageText: newMessage,
+    })
+  });
+  if (res.ok) {
+    const data = await res.json();
+    dispatch(addMessage(data.channelMessage));
+    return data;
+  }
+}
+
+
 export const deleteChannelMessage = (channelMessageId) => async (dispatch) => {
-  console.log('in store, val: ', channelMessageId)
   const res = await fetch 
     (`https://shrewdness.herokuapp.com/api/channelMessages/${channelMessageId}/delete`, {
     method: 'DELETE',
