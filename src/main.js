@@ -31,7 +31,8 @@ function createSplashScreen() {
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 550,
+    'minWidth': 530,
+    width: 530,
     height: 1900,
     backgroundColor: "black",
     show: true,

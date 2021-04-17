@@ -3,11 +3,19 @@ import socket from '../../service/socket';
 import { useDropzone } from 'react-dropzone';
 import './message.scss';
 
-const MessageInput = ({ user, channelId, channelName }) => {
+const MessageInput = ({ user, channelId, channelName, autoComplete }) => {
   const [value, setValue] = useState('');
   const [image, setImage] = useState(null);
   const [files, setFiles] = useState([])
+  const [alert, setAlert] = useState('')
+  const [autoCompleteResults, setAutoCompleteResults] = useState([])
   const userId = user?.id
+
+  const valHandler = (array) => {
+		const valArray = array.split(' ')
+		const val = valArray[valArray.length -1].toString();
+		return val;
+	}
 
   const keyPress = (e) => {
     if (e.key === 'Enter') {
@@ -16,14 +24,37 @@ const MessageInput = ({ user, channelId, channelName }) => {
       sendMessage();
       setValue('');
       setFiles([]);
+      setAutoCompleteResults([])
+    }
+    if (e.key === '/') {
+      e.preventDefault();
+      if (autoCompleteResults && autoCompleteResults.length !== 0) {
+        fillMessage(autoCompleteResults.shift())
+      }
+      else sendAlert('"/" key binding is reserved for autocomplete fill')
     }
   }
 
+  const fillMessage = async (word) => {
+    const valueArray = value.split(' ');
+    valueArray.pop();
+    valueArray.push(word)
+    const string = valueArray.join(' ');
+    setValue(string);
+    document.querySelector('.messageInputTextarea').innerHTML = value;
+  }
+  
+  const sendAlert = (string) => {
+    setAlert(string)
+    console.log('in send alert function: ', alert)
+    setTimeout(() => setAlert(''),3000)
+  }
+  
   const sendMessage = () => {
     if (value.trim() === '') return;
-
+    
     let msg;
-
+    
     if(files[0]){
       msg = {
         messageText: value.trim(),
@@ -42,6 +73,11 @@ const MessageInput = ({ user, channelId, channelName }) => {
     }
     socket.emit(`chatMessage`, msg)
   }
+  
+  const autoCompleteFunc = (val) => {
+    const newVal = valHandler(val);
+		setAutoCompleteResults(autoComplete.autocomplete(newVal))
+	}
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",
@@ -66,6 +102,12 @@ const MessageInput = ({ user, channelId, channelName }) => {
   ))
 
   return (
+    <>
+      { alert &&
+        <div className='alert'>
+          <h3 className='messageOrigin'>{alert}</h3>
+        </div>
+      }
     <div className='messageInputDiv'>
       <div className='dropzone' {...getRootProps()}>
         <input {...getInputProps()} />
@@ -73,7 +115,9 @@ const MessageInput = ({ user, channelId, channelName }) => {
       </div>
       <textarea
         maxLength='140'
-        onChange={e => setValue(e.target.value)}
+        onChange={e => {
+          autoCompleteFunc(e.target.value)
+          setValue(e.target.value)}}
         onKeyPress={ keyPress }
         value={ value }
         className='messageInputTextarea'
@@ -88,6 +132,19 @@ const MessageInput = ({ user, channelId, channelName }) => {
         {images}
       </div>
     </div>
+    { autoCompleteResults?.length > 0 &&
+      <div className='autocomplete'>
+        <p>Click or Press '/'</p>
+        <ul className='autocompleteList'>
+          {
+            autoCompleteResults?.slice(0, 10).map((word) => (
+              <li key={word} onClick={() => fillMessage(word)}>{word}</li>
+            ))
+          }
+        </ul>
+      </div>
+    }
+    </>
   )
 }
 

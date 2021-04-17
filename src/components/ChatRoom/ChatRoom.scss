@@ -4,7 +4,7 @@
   overflow: scroll;
   border: none;
   background: var(--bg);
-}
+};
 
 .avatar {
   width: 50px;
@@ -12,56 +12,57 @@
   border-radius: 50%;
   margin-right: 15px;
   cursor: pointer;
-}
+};
 
 .postMessage {
   display: flex;
   flex-direction: column;
-}
+};
 
 #messagePad {
-  padding: 50px;
-}
+  padding: 30px;
+};
 
 .chatComponentDiv {
   box-sizing: border-box;
-  height: 90%;
   color: var(--color-main);
-  width: 90%;
+  width: 90vw;
   margin-left: 5%;
-  padding: 15px;
-}
+  overflow-wrap: anywhere;
+  margin-bottom: 8px;
+};
 
 .post {
   display: flex;
   flex-direction: row;
-}
+};
 
 .post:hover {
   background: var(--hover)
-}
+};
 
 .message {
   font-size: 14px;
   font-weight: 100;
   display: flex;
   flex-direction: column;
-
-}
+};
 
 .divImage {
   padding-top: 6px;
   margin: auto;
-}
+};
 
 .divImage:hover {
   opacity: 0.7;
-}
+};
 
 .postInfo {
   display: flex;
   flex-direction: row;
-}
+  margin: 0;
+  padding: 0;
+};
 
 .messageImg {
   border-radius: 6px;
@@ -69,26 +70,33 @@
   max-height: 400px;
   transition: 0.3s;
   cursor: pointer;
-}
+};
 
 .messageOrigin {
   font-size: 18px;
   font-weight: bold;
   color: var(--color-accent);
   cursor: pointer;
-}
+};
 
 .messageOrigin:hover {
   text-decoration: underline;
-}
+};
 
 .messageTime {
-  font-size: 8px;
-  margin: 10px;
-}
+  margin-left: 20px;
+};
+
+.messageTime > p {
+  font-size: 10px;
+  transform: translateY(-8px)
+};
 
 .messageText {
+  max-width: clamp(20vw, 80vw, 90vw);
   font-size: 18px;
+  margin: 0;
+  padding: 0;
 };
 
 .messageText > p {
@@ -99,17 +107,17 @@
 .modal-content {
   animation-name: zoom;
   animation-duration: 0.3s;
-}
+};
 
 @keyframes zoom {
   from {transform:scale(0)}
   to {transform:scale(1)}
-}
+};
 
 .userCard {
   animation-name: fade;
   animation-duration: 0.6s;
-}
+};
 
 @keyframes fade {
   from {
@@ -118,8 +126,26 @@
   to {
     opacity: 1;
   }
+};
+
+.deleteMessageButton {
+  width: 15px;
+};
+
+.editMessageInputDiv {
+  font-size: 18px;
+  display: flex;
+  flex-direction: row;
+  background: var(--bars);
+  color: var(--highlight);
+  border-radius: 12px;
+  z-index: 1;
+  width: 70vw;
+  left: 50%;
+  bottom: 25px;
 }
 
-.deleteMessage{
-  width: 15px;
+.editMessage {
+  display: flex;
+  flex-direction: row;
 }
