@@ -10,8 +10,8 @@ const isDev = !app.isPackaged;
 
 const storage = require('electron-json-storage');
 
-const dockIcon = path.join(__dirname, 'icons', 'gorillaFile.jpeg');
-const trayIcon = path.join(__dirname, 'icons', 'gorillaFileTray.jpeg');
+const dockIcon = path.join(__dirname, 'assets', 'icons', 'gorillaFile.jpeg');
+const trayIcon = path.join(__dirname, 'assets', 'icons', 'gorillaFileTray.jpeg');
 
 function createSplashScreen() {
   const window = new BrowserWindow({

@@ -6,11 +6,11 @@ import './index.scss';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { ModalProvider } from './context/Modal';
+import { ModalProvider } from './assets/components/Modal';
 import App from './App';
 
-import configureStore from './store';
-import * as sessionActions from './store/session';
+import configureStore from './assets/store';
+import * as sessionActions from './assets/store/session';
 
 const store = configureStore();
 
