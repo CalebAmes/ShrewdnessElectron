@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Notification, Tray } = require('electron');
+const { BrowserWindow, app, ipcMain, Notification, Tray } = require('electron');
 const path = require('path');
 const isDev = !app.isPackaged;
 
@@ -7,21 +7,21 @@ const storage = require('electron-json-storage');
 const dockIcon = path.join(__dirname, 'assets', 'icons', 'gorillaFile.jpeg');
 const trayIcon = path.join(__dirname, 'assets', 'icons', 'gorillaFileTray.jpeg');
 
-function createSplashScreen() {
-	const window = new BrowserWindow({
-		width: 500,
-		height: 300,
-		backgroundColor: '#4DCCBD',
-		frame: false,
-		transparent: true,
-		webPreferences: {
-			nodeIntegration: true,
-			enableRemoteModule: true,
-			contextIsolation: false,
-		},
-	});
-	window.loadFile('./public/splash.html');
-}
+// function createSplashScreen() {
+// 	const window = new BrowserWindow({
+// 		width: 500,
+// 		height: 300,
+// 		backgroundColor: '#4DCCBD',
+// 		frame: false,
+// 		transparent: true,
+// 		webPreferences: {
+// 			nodeIntegration: true,
+// 			enableRemoteModule: true,
+// 			contextIsolation: false,
+// 		},
+// 	});
+// 	window.loadFile('./public/splash.html');
+// }
 
 function createWindow() {
 	win = new BrowserWindow({
@@ -31,10 +31,10 @@ function createWindow() {
 		backgroundColor: 'black',
 		show: true,
 		webPreferences: {
-			nodeIntegration: true,
+			nodeIntegration: false,
 			enableRemoteModule: true,
-			contextIsolation: false,
-			// preload: path.join(__dirname, 'preload.js')
+			contextIsolation: true,
+			preload: path.join(__dirname, 'preload.js')
 		},
 	});
 
@@ -42,11 +42,11 @@ function createWindow() {
 	isDev && win.webContents.openDevTools();
 }
 
-if (isDev) {
-	require('electron-reload')(__dirname, {
-		electron: path.join(__dirname, '../', 'node_modules', '.bin', 'electron'),
-	});
-}
+// if (isDev) {
+// 	require('electron-reload')(__dirname, {
+// 		electron: path.join(__dirname, '../', 'node_modules', '.bin', 'electron'),
+// 	});
+// }
 
 const getUserStorage = () => {
 	storage.get('user-storage', function (err, data) {
@@ -62,12 +62,12 @@ const getUserStorage = () => {
 
 let tray = null;
 app.whenReady().then(() => {
-	// getUserStorage()
+	getUserStorage()
 	const notification = new Notification({ silent: true, title: 'hello user', body: 'welcome to Shrewdness' });
 	notification.show();
 	tray = new Tray(trayIcon);
 
-	const splash = createSplashScreen();
+	// const splash = createSplashScreen();
 	const mainApp = createWindow();
 
 	// setTimeout(() => {
@@ -86,6 +86,7 @@ ipcMain.on('FETCH_USER_LOCAL_STORAGE', () => {
 		win.send('HANDLE_FETCH_USER_LOCAL_STORAGE', {
 			user,
 		});
+		console.log('send user data: ', user)
 	});
 	storage.get('user-theme', (err, theme) => {
 		if (err) return null;
@@ -97,6 +98,7 @@ ipcMain.on('FETCH_USER_LOCAL_STORAGE', () => {
 
 ipcMain.on('SAVE_USER_LOCAL_STORAGE', (_, user) => {
 	setUserStorage(user);
+	console.log('save user: ', user)
 });
 
 const setUserStorage = (user) => {

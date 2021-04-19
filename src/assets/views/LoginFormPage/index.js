@@ -26,7 +26,6 @@ function LoginForm({open, fromSignup}) {
 
   const demoLogin = () => {
     dispatch(sessionActions.login({ credential: 'Demo-lition', password: 'password' }))
-    open()
   }
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ipcRenderer } from 'electron';
+// import { ipcRenderer } from 'electron';
 import { useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import * as sessionActions from './assets/store/session';
@@ -19,11 +19,11 @@ function App() {
 	const dispatch = useDispatch();
 	const [isLoaded, setIsLoaded] = useState(false);
 	useEffect(async () => {
-		ipcRenderer.on('HANDLE_FETCH_USER_THEME', (_, theme) => {
-			if (theme.theme.theme.theme === 'main') main();
-			if (theme.theme.theme.theme === 'blue') blue();
-			if (theme.theme.theme.theme === 'darkmode') darkmode();
-		});
+		// ipcRenderer.on('HANDLE_FETCH_USER_THEME', (_, theme) => {
+		// 	if (theme.theme.theme.theme === 'main') main();
+		// 	if (theme.theme.theme.theme === 'blue') blue();
+		// 	if (theme.theme.theme.theme === 'darkmode') darkmode();
+		// });
 		dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
 		dispatch(getChannelMessages());
 		dispatch(getChannel());

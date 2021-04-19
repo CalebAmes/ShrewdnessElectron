@@ -12,9 +12,6 @@ import { autoComplete, seedAutoComplete } from '../../services/autoComplete';
 import '../../components/UserCard/UserCard.scss';
 import './ChatRoom.scss';
 
-// this is for the electron version of this application
-import { ipcRenderer } from 'electron';
-
 const ChatRoom = () => {
 	const dispatch = useDispatch();
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -35,22 +32,23 @@ const ChatRoom = () => {
 		dispatch(getChannel());
 		dispatch(getChannelMessages());
 		setIsLoaded(true);
-		scroll();
-
+		
 		seedAutoComplete();
-
+		
 		socket.on(`chat_message_${id}`, async () => {
 			await dispatch(getChannelMessages());
 			
 			// this is for the electron version of this application
-			ipcRenderer.send('notify', msg);
-
+			window.electron.sendNotification();
+			
 			scroll();
 		});
-
+		
 		socket.on(`edit_channel_${id}`, async () => {
 			await dispatch(getChannelMessages());
 		});
+
+		scroll();
 	}, [id, dispatch]);
 
 	const scroll = () => {

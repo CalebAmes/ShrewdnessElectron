@@ -1,5 +1,5 @@
 // this is for the Electron version of this application
-import { ipcRenderer } from 'electron';
+// import { ipcRenderer } from 'electron';
 
 
 export const main = () => {
@@ -7,9 +7,10 @@ export const main = () => {
 	body.className = '';
 	body.classList.add('main');
 	// this is for the Electron version of this application
-	ipcRenderer.send('SAVE_USER_THEME', {
-    theme: 'main'
-  });
+	// ipcRenderer.send('SAVE_USER_THEME', {
+  //   theme: 'main'
+  // });
+	window.electron.saveUserTheme({ theme: 'main' });
 
 };
 
@@ -18,19 +19,21 @@ export const darkmode = () => {
 	body.className = '';
 	body.classList.add('darkmode');
 		// this is for the Electron version of this application
-	ipcRenderer.send('SAVE_USER_THEME', {
-		theme: 'darkmode'
-	});
-
+	// ipcRenderer.send('SAVE_USER_THEME', {
+	// 	theme: 'darkmode'
+	// });
+	window.electron.saveUserTheme({ theme: 'darkmode' });
+	
 };
 
 export const blue = () => {
 	const body = document.getElementById('body');
 	body.className = '';
 	body.classList.add('blue');
-		// this is for the Electron version of this application
-	ipcRenderer.send('SAVE_USER_THEME', {
-		theme: 'blue'
-	});
-
+	// this is for the Electron version of this application
+	// ipcRenderer.send('SAVE_USER_THEME', {
+		// 	theme: 'blue'
+		// });
+	window.electron.saveUserTheme({ theme: 'blue' });
+		
 };
