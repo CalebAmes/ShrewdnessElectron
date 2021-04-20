@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { getUsers } from '../../store/users';
 import { getGroup } from '../../store/groups';
 import { getChannel } from '../../store/channels';
 import { getChannelMessages } from '../../store/channelMessages';
