@@ -34,6 +34,7 @@ const ChatRoom = () => {
 		dispatch(getGroup());
 		dispatch(getChannel());
 		dispatch(getChannelMessages());
+		dispatch(getUsers());
 		setIsLoaded(true);
 		scroll();
 

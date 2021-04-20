@@ -13,20 +13,18 @@ function LoginForm({open, fromSignup}) {
 
   if (user) return <Redirect to='/chatRoom/1' />
   
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors([]);
-    const res = await dispatch(sessionActions.login({ credential, password })).catch(
-      (res) => {
-        if (res.data && res.data.errors) {
-          setErrors(res.data.errors);
-        }
-      })
-  };
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setErrors([]);
+		await dispatch(sessionActions.login({ credential, password })).catch((res) => {
+			if (res.status === 401) {
+				setErrors(['The provided credentials are invalid.']);
+			}
+		});
+	};
 
   const demoLogin = () => {
     dispatch(sessionActions.login({ credential: 'Demo-lition', password: 'password' }))
-    open()
   }
 
   return (
