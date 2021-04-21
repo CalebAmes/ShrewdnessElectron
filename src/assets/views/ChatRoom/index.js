@@ -45,7 +45,7 @@ const ChatRoom = () => {
 			await dispatch(getChannelMessages());
 			
 			// this is for the electron version of this application
-			ipcRenderer.send('notify', msg);
+			ipcRenderer.send('notify');
 
 			scroll();
 		});

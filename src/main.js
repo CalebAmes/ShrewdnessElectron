@@ -4,8 +4,7 @@ const isDev = !app.isPackaged;
 
 const storage = require('electron-json-storage');
 
-const dockIcon = path.join(__dirname, 'assets', 'icons', 'gorillaFile.jpeg');
-const trayIcon = path.join(__dirname, 'assets', 'icons', 'gorillaFileTray.jpeg');
+const dockIcon = path.join(__dirname, 'assets', 'icons', 'shrewdnessDock.png');
 
 function createSplashScreen() {
 	const window = new BrowserWindow({
@@ -28,13 +27,12 @@ function createWindow() {
 		minWidth: 530,
 		width: 530,
 		height: 1900,
-		backgroundColor: 'black',
+		backgroundColor: '#beee62',
 		show: true,
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true,
 			contextIsolation: false,
-			// preload: path.join(__dirname, 'preload.js')
 		},
 	});
 
@@ -60,24 +58,15 @@ const getUserStorage = () => {
 	});
 };
 
-let tray = null;
 app.whenReady().then(() => {
-	// getUserStorage()
 	const notification = new Notification({ silent: true, title: 'hello user', body: 'welcome to Shrewdness' });
 	notification.show();
-	tray = new Tray(trayIcon);
 
-	const splash = createSplashScreen();
 	const mainApp = createWindow();
-
-	// setTimeout(() => {
-	//   createWindow().show();
-	//   createSplashScreen().destroy();
-	// }, 2000)
 });
 
 ipcMain.on('notify', (_, msg) =>
-	new Notification({ sound: 'Purr', title: 'chat message', body: 'new message in chat' }).show()
+	new Notification({ sound: 'Purr', title: 'Shrewdness', body: 'new message in chat' }).show()
 );
 
 ipcMain.on('FETCH_USER_LOCAL_STORAGE', () => {
