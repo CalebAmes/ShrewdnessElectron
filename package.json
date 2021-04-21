@@ -1,7 +1,7 @@
 {
 	"name": "shrewdness",
 	"version": "0.1.0",
-	"private": true,
+	"description": "Portfolio Project",
 	"main": "./src/main.js",
 	"dependencies": {
 		"@babel/preset-env": "^7.13.12",
@@ -11,7 +11,6 @@
 		"@testing-library/user-event": "^7.1.2",
 		"babel-loader": "^8.2.2",
 		"css-loader": "^5.2.0",
-		"electron-builder": "^22.10.5",
 		"electron-json-storage": "^4.4.0",
 		"express": "^4.17.1",
 		"js-cookie": "^2.2.1",
@@ -41,17 +40,19 @@
     "make:mac": "electron-builder --mac",
     "make:win": "electron-builder --win --x64"
 	},
+	"author": "Caleb Gilbert",
+	"licence": "MIT",
 	"build": {
+		"extends": null,
 		"productName": "Shrewdness",
     "appId": "com.caleb.shrewdness",
 		"files": [
-			"build/**/*",
-			"src/assets/icons/*",
-			"public/index.html",
-			"src/main.js"
+			"./build/**/*",
+			"./src/assets/icons/*",
+			"./public/index.html",
+			"./src/main.js"
 		],
 		"mac": {
-			"category": "public.app-category.developer-tools",
 			"icon": "src/assets/icons/shrewdnessDock.png",
 			"hardenedRuntime": true,
 			"gatekeeperAssess": false
@@ -109,6 +110,7 @@
 		"redux-logger": "^3.0.6",
 		"webpack": "^5.28.0",
 		"webpack-cli": "^4.6.0",
+		"electron-builder": "^22.10.5",
 		"webpack-merge": "^5.7.3"
 	},
 	"proxy": "http://localhost:8000"
